@@ -38,31 +38,42 @@ function jobscout_add_sidebar_layout_box(){
 }
 add_action( 'add_meta_boxes', 'jobscout_add_sidebar_layout_box' );
 
-$jobscout_sidebar_layout = array(    
-    'default-sidebar'=> array(
-         'value'     => 'default-sidebar',
-         'label'     => __( 'Default Sidebar', 'jobscout' ),
-         'thumbnail' => get_template_directory_uri() . '/images/default-sidebar.png'
-    ),
-    'no-sidebar'     => array(
-         'value'     => 'no-sidebar',
-         'label'     => __( 'Full Width', 'jobscout' ),
-         'thumbnail' => get_template_directory_uri() . '/images/full-width.png'
-    ),
-    'left-sidebar' => array(
-         'value'     => 'left-sidebar',
-         'label'     => __( 'Left Sidebar', 'jobscout' ),
-         'thumbnail' => get_template_directory_uri() . '/images/left-sidebar.png'         
-    ),
-    'right-sidebar' => array(
-         'value'     => 'right-sidebar',
-         'label'     => __( 'Right Sidebar', 'jobscout' ),
-         'thumbnail' => get_template_directory_uri() . '/images/right-sidebar.png'         
-     )    
-);
+
+/**
+ * Get sidebar layout data.
+ *
+ * @return array
+ */
+if( ! function_exists( 'jobscout_get_sidebar_layout_data' ) ){
+    function jobscout_get_sidebar_layout_data(){
+        return array(
+            'default-sidebar'=> array(
+                'value'     => 'default-sidebar',
+                'label'     => __( 'Default Sidebar', 'jobscout' ),
+                'thumbnail' => get_template_directory_uri() . '/images/default-sidebar.png'
+            ),
+            'no-sidebar'     => array(
+                'value'     => 'no-sidebar',
+                'label'     => __( 'Full Width', 'jobscout' ),
+                'thumbnail' => get_template_directory_uri() . '/images/full-width.png'
+            ),
+            'left-sidebar' => array(
+                'value'     => 'left-sidebar',
+                'label'     => __( 'Left Sidebar', 'jobscout' ),
+                'thumbnail' => get_template_directory_uri() . '/images/left-sidebar.png'         
+            ),
+            'right-sidebar' => array(
+                'value'     => 'right-sidebar',
+                'label'     => __( 'Right Sidebar', 'jobscout' ),
+                'thumbnail' => get_template_directory_uri() . '/images/right-sidebar.png'         
+            )    
+        );
+    }
+}
 
 function jobscout_sidebar_layout_callback(){
-    global $post , $jobscout_sidebar_layout;
+    global $post;
+    $jobscout_sidebar_layout = jobscout_get_sidebar_layout_data();
     wp_nonce_field( basename( __FILE__ ), 'jobscout_nonce' ); ?>
     <table class="form-table">
         <tr>
@@ -90,7 +101,8 @@ function jobscout_sidebar_layout_callback(){
 }
 
 function jobscout_save_sidebar_layout( $post_id ){
-    global $jobscout_sidebar_layout;
+    $jobscout_sidebar_layout = jobscout_get_sidebar_layout_data();
+
 
     // Verify the nonce before proceeding.
     if( !isset( $_POST[ 'jobscout_nonce' ] ) || !wp_verify_nonce( $_POST[ 'jobscout_nonce' ], basename( __FILE__ ) ) )

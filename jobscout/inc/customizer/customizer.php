@@ -53,7 +53,7 @@ function jobscout_customize_script(){
         'home'    => get_home_url(),
         'ajax_url'   => admin_url( 'admin-ajax.php' ),
         'flushit'    => __( 'Successfully Flushed!','jobscout' ),
-        'nonce'      => wp_create_nonce('ajax-nonce'),
+        'nonce'      => wp_create_nonce('jobscout_flush_fonts_nonce'),
     );
     wp_enqueue_style( 'jobscout-pro-customize', get_template_directory_uri() . '/inc/css/customize.css', array(), JOBSCOUT_THEME_VERSION );
     wp_enqueue_script( 'jobscout-pro-customize', get_template_directory_uri() . '/inc/js/customize.js', array( 'jquery', 'customize-controls' ), JOBSCOUT_THEME_VERSION, true );
@@ -70,20 +70,30 @@ require get_template_directory() . '/inc/customizer-plugin-recommend/plugin-inst
 
 require get_template_directory() . '/inc/customizer-plugin-recommend/plugin-install/class-plugin-recommend.php';
 
-$config_customizer = array(
-    'recommended_plugins' => array(
-        //change the slug for respective plugin recomendation
-        'raratheme-companion' => array(
-            'recommended' => true,
-            'description' => sprintf(
-                /* translators: %s: plugin name */
-                esc_html__( 'If you want to take full advantage of the features this theme has to offer, please install and activate %s plugin.', 'jobscout' ), '<strong>RaraTheme Companion</strong>'
+/**
+ * Initialize Jobscout Customizer Notice
+ *
+ * @since 1.0.0
+ */
+if( ! function_exists( 'jobscout_customizer_notice_init' ) ) {
+	function jobscout_customizer_notice_init() {
+		$config_customizer = array(
+            'recommended_plugins' => array(
+                //change the slug for respective plugin recomendation
+                'raratheme-companion' => array(
+                    'recommended' => true,
+                    'description' => sprintf(
+                        /* translators: %s: plugin name */
+                        esc_html__( 'If you want to take full advantage of the features this theme has to offer, please install and activate %s plugin.', 'jobscout' ), '<strong>RaraTheme Companion</strong>'
+                    ),
+                ),
             ),
-        ),
-    ),
-    'recommended_plugins_title' => esc_html__( 'Recommended Plugin', 'jobscout' ),
-    'install_button_label'      => esc_html__( 'Install and Activate', 'jobscout' ),
-    'activate_button_label'     => esc_html__( 'Activate', 'jobscout' ),
-    'deactivate_button_label'   => esc_html__( 'Deactivate', 'jobscout' ),
-);
-jobscout_Customizer_Notice::init( apply_filters( 'jobscout_customizer_notice_array', $config_customizer ) );
+            'recommended_plugins_title' => esc_html__( 'Recommended Plugin', 'jobscout' ),
+            'install_button_label'      => esc_html__( 'Install and Activate', 'jobscout' ),
+            'activate_button_label'     => esc_html__( 'Activate', 'jobscout' ),
+            'deactivate_button_label'   => esc_html__( 'Deactivate', 'jobscout' ),
+        );
+        jobscout_Customizer_Notice::init( apply_filters( 'jobscout_customizer_notice_array', $config_customizer ) );
+    }
+}
+add_action( 'init', 'jobscout_customizer_notice_init' );

@@ -1,4 +1,4 @@
-import { __ } from "@wordpress/i18n";
+import { __ , sprintf } from "@wordpress/i18n";
 import { Icon } from "../../components";
 import { mainDemo, demo2, demo3} from "../../components/images"
 

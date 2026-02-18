@@ -35,8 +35,10 @@ jQuery(document).ready(function($){
         $.ajax ({
             url     : jobscout_cdata.ajax_url,  
             type    : 'post',
-            data    : 'action=flush_local_google_fonts',    
-            nonce   : jobscout_cdata.nonce,
+            data    : {
+                action: 'flush_local_google_fonts',
+                nonce: jobscout_cdata.nonce
+            },
             success : function(results){
                 //results can be appended in needed
                 $( '.flush-it' ).val(jobscout_cdata.flushit);

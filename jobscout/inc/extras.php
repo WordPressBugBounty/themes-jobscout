@@ -492,14 +492,23 @@ if( ! function_exists( 'jobscout_flush_local_google_fonts' ) ){
      * Ajax Callback for flushing the local font
      */
     function jobscout_flush_local_google_fonts() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'jobscout_flush_fonts_nonce' ) ) {
+			wp_send_json_error( 'Invalid nonce', 403 );
+		}
+
+		// Check user capability - only administrators should flush fonts
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Insufficient permissions', 403 );
+		}
+
         $WebFontLoader = new jobScout_WebFont_Loader();
         //deleting the fonts folder using ajax
         $WebFontLoader->delete_fonts_folder();
-        die();
+
+        wp_send_json_success();
     }
 }
 add_action( 'wp_ajax_flush_local_google_fonts', 'jobscout_flush_local_google_fonts' );
-add_action( 'wp_ajax_nopriv_flush_local_google_fonts', 'jobscout_flush_local_google_fonts' );
 
 if( ! function_exists( 'jobscout_get_home_sections' ) ) :
 /**
