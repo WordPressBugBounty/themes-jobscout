@@ -144,7 +144,12 @@ jQuery(document).ready(function($) {
       });
 
     //responsive table
-    $( 'table.job-manager-jobs' ).each(function( index ) {
+    function makeTableCell( label ) {
+      return function() {
+        return $('<td data-title="'+ label +'">').append($(this).contents());
+      };
+    }
+    $( 'table.job-manager-jobs' ).each(function() {
       //We are seeing our creatures
       var head_col_count =  $(this).find('thead tr th').size();
       //We consider our th elements in the table
@@ -152,11 +157,7 @@ jQuery(document).ready(function($) {
         // Work with text
         var head_col_label = $(this).find('thead th:nth-child('+ j +')').text();
         //Each td is assigned a data-title, which is then output via css
-        $( this ).find('tr td:nth-child('+ j +')').replaceWith(
-          function(){
-            return $('<td data-title="'+ head_col_label +'">').append($(this).contents());
-        }
-        );
+        $( this ).find('tr td:nth-child('+ j +')').replaceWith( makeTableCell( head_col_label ) );
     }
-}); 
+});
 });
